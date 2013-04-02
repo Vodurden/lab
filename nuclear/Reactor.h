@@ -47,14 +47,10 @@ namespace NUClear {
             class With {};
 
             template <typename TTrigger, typename TFunc>
-            void on(TFunc callback); /*{
-                OnImpl<TTrigger, With<>, TFunc>(this)(callback);
-            }*/
+            void on(TFunc callback); 
 
             template <typename TTrigger, typename TWith, typename TFunc>
-            void on(TFunc callback); /*{
-                OnImpl<TTrigger, TWith, TFunc>(this)(callback);
-            }*/
+            void on(TFunc callback); 
         private:
             ReactorController& reactorController;
             std::map<std::type_index, std::vector<std::function<void ()>>> m_callbacks;
@@ -85,10 +81,7 @@ namespace NUClear {
             struct OnImpl<Trigger<TTriggers...>, With<TWiths...>, TFunc> {
                 Reactor* context;
                 OnImpl(Reactor* context); 
-
-                void operator()(TFunc callback);/* {
-                    context->bindTriggers<TTriggers...>(context->buildCallback<TFunc, TTriggers..., TWiths...>(callback));
-                }*/
+                void operator()(TFunc callback);            
             };
             
             /**
@@ -102,11 +95,7 @@ namespace NUClear {
              * @returns The wrapped callback
              */
             template <typename TFunc, typename... TTriggersAndWiths>
-            std::function<void ()> buildCallback(TFunc callback); /*{
-                return ([this, callback]() {
-                    callback((*reactorControl.get<TTriggersAndWiths>())...);
-                });
-            }*/
+            std::function<void ()> buildCallback(TFunc callback); 
 
             
             /**
@@ -115,9 +104,7 @@ namespace NUClear {
              * @param callback the callback to add
              */
             template <typename TTrigger>
-            void bindTriggers(std::function<void ()> callback); /*{
-                bindTriggersImpl<TTrigger>(callback, reinterpret_cast<TTrigger*>(0));
-            }*/
+            void bindTriggers(std::function<void ()> callback);
 
             /**
              * @brief Recursively calls the single-param bindTriggers method for every trigger in the list.
@@ -127,11 +114,7 @@ namespace NUClear {
              * @param callback the callback to bind to all of these triggers.
              */
             template <typename TTriggerFirst, typename TTriggerSecond, typename... TTriggers>
-            void bindTriggers(std::function<void ()> callback);/*{
-                bindTriggers<TTriggerFirst>(callback);
-                bindTriggers<TTriggerSecond, TTriggers...>(callback);
-            }*/
-
+            void bindTriggers(std::function<void ()> callback);
             /**
              * @brief The implementation method for bindTriggers, provides partial template specialization for specific-trigger type logic.
              * @tparam TTrigger the trigger to bind to
@@ -139,24 +122,14 @@ namespace NUClear {
              * @param placeholder used for partial template specialization
              */
             template <typename TTrigger>
-            void bindTriggersImpl(std::function<void ()> callback, TTrigger* /*placeholder*/); /*{
-                auto& callbacks = getCallbackList<TTrigger>();
-                callbacks.push_back(callback);
-            }*/
-
+            void bindTriggersImpl(std::function<void ()> callback, TTrigger* /*placeholder*/); 
             /**
              * @brief Gets the callback list for a given type
              * @tparam TTrigger the type to get the callback list for
              * @returns The callback list
              */
             template <typename TTrigger>
-            std::vector<std::function<void ()>>& getCallbackList(); /*{
-                if(m_callbacks.find(typeid(TTrigger)) == m_callbacks.end()) {
-                    m_callbacks[typeid(TTrigger)] = std::vector<std::function<void ()>>();
-                }
-
-                return m_callbacks[typeid(TTrigger)];
-            }*/
+            std::vector<std::function<void ()>>& getCallbackList();     
     };
 }
 
